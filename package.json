@@ -6,7 +6,9 @@
   "author": "Easy <easychen@qq.com>",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^16.3.1"
+    "api2d": "^0.1.32",
+    "dotenv": "^16.3.1",
+    "enquirer": "^2.4.1"
   },
   "type": "module"
 }
