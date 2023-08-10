@@ -141,7 +141,7 @@ class GenBook
                 // console.log(text);
                 console.log("请稍候，正在发起请求…");
                 const result = await gen(text);
-                console.log("result", result.json);
+                // console.log("result", result.json);
                 if( result.json.sections )
                 {
                     chapters[i].sections = result.json.sections;
@@ -208,7 +208,7 @@ class GenBook
                     
                     console.log("请稍候，正在发起请求…");
                     const result = await gen(text,  ( message, char ) => process.stdout.write(char), 'bba-content');
-                    console.log("result", result.json);
+                    // console.log("result", result.json);
                     if( result.json['bba-content'] )
                     {
                         sections[j].content = result.json['bba-content'];
