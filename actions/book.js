@@ -1,4 +1,7 @@
-import { gen, getPrompt, readData, writeData, extractJSON } from '../lib/functions.js';
+import { gen, getPrompt, readData, writeData, extractJSON, outputDir } from '../lib/functions.js';
+import path from 'path';
+import fs from 'fs';
+import { exec } from 'child_process';
 import pkg from 'enquirer';
 const { prompt } = pkg;
 const BOOK_LANG = process.env.BOOK_LANG || '中文';
@@ -43,6 +46,7 @@ class GenBook
             
             bookData.title = info2.title;
             bookData.desp = info.desp;
+            bookData.coverDetail = result.json.cover_detail;
             writeData(bookData);
             console.log(`书名 《${bookData.title}》`);
         }else
@@ -283,6 +287,74 @@ class GenBook
         `;
         const ret = extractJSON(text);
         console.log(ret);
+    }
+
+    async make()
+    {
+        const bookData = readData();
+        // 在 book 目录下初始化 mdbook 项目
+        const bookDir = path.join( outputDir, bookData.title);
+        // 确保目录存在
+        if( !fs.existsSync(bookDir) )
+        {
+            fs.mkdirSync(bookDir);
+        }
+        // 初始化 mdbook 项目
+        const initCmd = `cd ${bookDir} && mdbook init --ignore git --title "${bookData.title}" --force`;
+        // 运行命令，并输出结果
+        // console.log(initCmd);
+        console.log("正在初始化 mdbook 项目…");
+        await new Promise((resolve, reject) => {
+            exec(initCmd, (err, stdout, stderr) => {
+                if (err) {
+                    console.error(err);
+                    reject(err);
+                }
+                console.log(stdout);
+                resolve();
+            });
+        }
+        );
+
+        const summaryPath = path.join(bookDir, 'src/SUMMARY.md');
+        
+        // 循环章节，生成 mdbook 的 SUMMARY.md 
+        let summary = `# Summary\n\n`;
+        const chapters = bookData.index.chapters;
+        for( let i = 0; i < chapters.length; i++ )
+        {
+            const chapterDir = path.join(bookDir, 'src',  chapters[i].title);
+            // 确保目录存在
+            if( !fs.existsSync(chapterDir) )
+            {
+                fs.mkdirSync(chapterDir);
+            }
+
+            // 创建章节的 README.md
+            const chapterReadmePath = path.join(chapterDir, 'README.md');
+            const chapterReadme = `# ${chapters[i].title}\n\n${chapters[i].desp||chapters[i].howTo||""}\n\n`;
+            fs.writeFileSync(chapterReadmePath, chapterReadme);
+            
+            const sections = chapters[i].sections;
+            if( !sections )
+            {
+                continue
+            }
+            summary += `* [${chapters[i].title}](${chapters[i].title}/README.md)\n`;
+            for( let j = 0; j < sections.length; j++ )
+            {
+                summary += `    * [${sections[j].title}](${chapters[i].title}/${sections[j].title}.md)\n`;
+                // 将 section 的内容写入文件
+                const sectionPath = path.join(chapterDir, `${sections[j].title}.md`);
+                // console.log("sectionPath", sectionPath, sections[j]);
+                const sectionContent = String(sections[j].content.trim()).startsWith(`# ${sections[j].title}`) ? sections[j].content : `# ${sections[j].title}\n\n${sections[j].content}`;
+                fs.writeFileSync(sectionPath, sectionContent);
+                
+            }
+        }
+        // console.log(summary);
+        fs.writeFileSync(summaryPath, summary);
+        console.log("summary 生成");
     }
 }
 
