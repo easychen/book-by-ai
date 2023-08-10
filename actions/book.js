@@ -1,4 +1,4 @@
-import { gen, getPrompt, readData, writeData, extractJSON, outputDir } from '../lib/functions.js';
+import { gen, getPrompt, readData, writeData, extractJSON, outputDir, genImage, baseDir } from '../lib/functions.js';
 import path from 'path';
 import fs from 'fs';
 import { exec } from 'child_process';
@@ -239,6 +239,90 @@ class GenBook
         }
     }
 
+    async addImage()
+    {
+        const bookData = readData();
+        const bookDir = path.join( outputDir, bookData.title);
+        const imageDir = path.join( bookDir, 'src', 'images');
+        // 确保目录存在
+        if( !fs.existsSync(imageDir) )
+        {
+            fs.mkdirSync(imageDir, { recursive: true });
+        }
+        // 读取封面数据
+        if( bookData.coverDetail && !bookData.coverUrls )
+        {
+            console.log(`开始生成封面图片${bookData.coverDetail}，请稍候…`);
+            // 生成封面图片
+            const covers = await genImage(bookData.coverDetail);
+            if( covers.artifacts )
+            {
+                // 循环artifacts，将 base64 的图片保存到 imageDir 下
+                for( let i = 0; i < covers.artifacts.length; i++ )
+                {
+                    const item = covers.artifacts[i];
+                    if(item.base64)
+                    {
+                        const filename = path.join(imageDir, `cover.${i}.png`);
+                        // 保存base64数据到文件
+                        const buffer = Buffer.from(item.base64, 'base64');
+                        fs.writeFileSync(filename, buffer);
+
+                        bookData.coverUrls = bookData.coverUrls || [];
+                        bookData.coverUrls.push(`cover.${i}.png`);
+
+                        writeData(bookData);
+                    } 
+                }
+            }
+        }
+
+        // 循环章节，再循环节
+        const chapters = bookData.index.chapters;
+        for( let i = 0; i < chapters.length; i++ )
+        {
+            for( let j = 0; j < chapters[i].sections.length; j++ )
+            {
+                const section = chapters[i].sections[j];
+                if( section.cover_detail )
+                {
+                    // 生成图片
+                    console.log(`开始生成图片${section.cover_detail}，请稍候…`);
+                    const images = await genImage(section.cover_detail);
+                    if( images.artifacts )
+                    {
+                        // 循环artifacts，将 base64 的图片保存到 imageDir 下
+                        for( let k = 0; k < images.artifacts.length; k++ )
+                        {
+                            const item = images.artifacts[k];
+                            if(item.base64)
+                            {
+                                const filename = path.join(imageDir, `chapter.${i+1}.section.${j+1}.image.${k+1}.png`);
+                                // 保存base64数据到文件
+                                const buffer = Buffer.from(item.base64, 'base64');
+                                fs.writeFileSync(filename, buffer);
+
+                                section.images = section.images || [];
+                                section.images.push(`chapter.${i+1}.section.${j+1}.image.${k+1}.png`);
+
+                                writeData(bookData);
+                            } 
+                        }
+                    }
+                }
+
+                // 休息5秒
+                console.log("5秒后开始生成下一张图片，按 Ctrl+C 可以中断程序");
+                await new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve();
+                    }, 5000);
+                });
+            }
+        }
+
+    }
+
     buildToc()
     {
         // 循环章节，生成 Table of Content
@@ -263,30 +347,11 @@ class GenBook
         return toc;
     }
 
-    test()
+    async test()
     {
-        const text = `
-2. 我注意到本小节不是重点小节,将控制在1000字以内。
-
-3. 内容如下:
-3. 撰写的内容如下:
-
-    {   
-      "content": "## 社交媒体运营的兴起
-
-过去十年,社交媒体的迅猛发展为内容创作者提供了前所未有的曝光机会。随着互联网和移动网络的普及,普通大众获取信息和娱乐的渠道也从传统媒体向社交平台转移。越来越多优秀的创作者开始利用微博、B站、抖音等新兴社交平台进行传播,并凭借这些社交媒体积累大量粉丝。        
-
-这其中最典型的例子非微博莫属。2006年微博诞生后,很快就成为中国网民获取新闻和表达观点的主要平台。明星大V、网红、自媒体人等在微博上的每一条发言,都能产生海量转发和讨论。相比传统媒体仅仅是单向输出内容,微博平台让每一个普通用户都可以参与讨论并产生影响力。一时间,\"头条都是大V的微博\"成为这个时代的标志。       
-
-视频类社交平台抖音和B站的繁荣,也让 \"草根\" 创作者有了更多被发现和走红的机会。这两家平台都具有强大的推荐算法,能够挖掘出优秀的创作内容。许多原本默默无闻的创作者,在这些平台上积累人气后成功出圈,并在此基础上获得商业价值的转化。从这个角度看,平台与内容创作者可谓你中有我、我中有你,实现了共赢。      
-
-综上所述,社交媒体的兴起为个人的内容创作提供了空前的舞台。只要你有创作激情和优质内容,就很有可能通过新兴的社交平台积累影响力、吸引粉丝、实现商业价值。如何在这个时代抓住机遇,本书将为你逐一解析。"
-    }
-
-请您检查并提出修改意见,我会继续完善。非常感谢您的指导
-        `;
-        const ret = extractJSON(text);
-        console.log(ret);
+        // console.log("正在生成图片，请耐心等候…");
+        // const ret = await genImage("A young woman using data analytics software and charts on multiple monitors to uncover insights and showing excitement as profits rapidly increase.");
+        // console.log(ret);
     }
 
     async make()
@@ -319,7 +384,17 @@ class GenBook
         const summaryPath = path.join(bookDir, 'src/SUMMARY.md');
         
         // 循环章节，生成 mdbook 的 SUMMARY.md 
-        let summary = `# Summary\n\n`;
+        let summary = `# Summary\n\n* [封面](README.md)\n`;
+        // 生成首页
+        const frontPath = path.join(bookDir, 'src/README.md');
+        let frontContent = `# ${bookData.title}\n\n`;
+        // 如果存在封面图片，则添加图片
+        if( bookData.coverUrls )
+        {
+            frontContent += `![封面](/images/${bookData.coverUrls[0]})\n\n`;
+        }
+        fs.writeFileSync(frontPath, frontContent);
+
         const chapters = bookData.index.chapters;
         for( let i = 0; i < chapters.length; i++ )
         {
@@ -347,8 +422,12 @@ class GenBook
                 // 将 section 的内容写入文件
                 const sectionPath = path.join(chapterDir, `${sections[j].title}.md`);
                 // console.log("sectionPath", sectionPath, sections[j]);
+
+                const sectionCoverMarkdown = sections[j].images ? sections[j].images.map((url) => `![${sections[j].title}](/images/${url})`).join("\n\n")+`\n\n` : "";
+
                 const sectionContent = String(sections[j].content.trim()).startsWith(`# ${sections[j].title}`) ? sections[j].content : `# ${sections[j].title}\n\n${sections[j].content}`;
-                fs.writeFileSync(sectionPath, sectionContent);
+
+                fs.writeFileSync(sectionPath, sectionCoverMarkdown+''+sectionContent);
                 
             }
         }
