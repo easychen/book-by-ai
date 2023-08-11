@@ -10,8 +10,8 @@ Generate high-quality books with AI
 
 1. 人工输入文字：十个以内
 1. 生成时间：累计2小时
-1. 消耗费用：3元左右（30张图片的生成费用）
-1. 在线阅读：<http://r.ftqq.com/book-by-ai/>
+1. 花费成本：3元左右（30张图片的生成费用）
+1. 在线阅读：<https://demo01.level06.com/>
 
 
 ## 前置要求
