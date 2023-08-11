@@ -206,10 +206,32 @@ class GenBook
                         section_is_important: sections[j].important?"是":"不是",
                         language: BOOK_LANG,
                     }
-    
-                    const text = getPrompt('gen_content', { ...bookInfo, ...bookData.chapterPref||{} });
+
+                    let ref = "";
+                    // 搜索网页获取资料
+                    if( process.env.SEARCH_DOMAIN && sections[j].queries && sections[j].queries.length > 0 )
+                    {
+                        console.log("请稍候，正在发起搜索请求…");
+                        const sites = process.env.SEARCH_DOMAIN == '*' ? false : process.env.SEARCH_DOMAIN.split("|");
+                        const results = await search( 
+                            sections[j].queries.join(" "), 
+                            sites, 
+                            true, // headless
+                            true // extend link
+                        );
+                        // console.log(results);
+                        if( results && results.length > 0 )
+                        {
+                            ref = JSON.stringify(results);
+                        }
+                    }else
+                    {
+                        console.log(process.env.SEARCH_DOMAIN, sections[j].queries);
+                    }
+
+                    const text = getPrompt('gen_content', { ...bookInfo, ...bookData.chapterPref||{}, ref });
                     console.log(text);
-                    
+
                     console.log("请稍候，正在发起请求…");
                     const result = await gen(text,  ( message, char ) => process.stdout.write(char), 'bba-content');
                     // console.log("result", result.json);
