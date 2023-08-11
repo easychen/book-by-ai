@@ -10,8 +10,26 @@ class GenBook
 {
     async main()
     {
-        // 首先，我们需要一个描述，并根据此描述生成一个标题
-        await this.title();
+        await this.title(); // 生成标题
+        await this.index(); // 生成目录（章）
+        await this.sections(); // 生成目录（节）
+        await this.write(); // 编写小节内容
+        await this.make(); // 生成 mdbook 项目
+        await this.addImage(); // 封面和章节配图生成
+    }
+
+    async help()
+    {
+        // 根据main调用的顺序，生成帮助信息
+        console.log(``);
+        console.log(`@title - 生成书名`);
+        console.log(`@index - 生成目录（章）`);
+        console.log(`@sections - 生成目录（节）`);
+        console.log(`@write - 编写小节内容`);
+        console.log(`@make - 生成 mdbook 项目`);
+        console.log(`@addImage - 封面和章节配图生成`);
+        console.log(``);
+        
     }
 
     async title()
