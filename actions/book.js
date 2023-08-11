@@ -1,4 +1,4 @@
-import { gen, getPrompt, readData, writeData, extractJSON, outputDir, genImage, baseDir, search } from '../lib/functions.js';
+import { gen, getPrompt, readData, writeData, extractJSON, outputDir, genImage, baseDir, search, fetch_url } from '../lib/functions.js';
 import path from 'path';
 import fs from 'fs';
 import { exec } from 'child_process';
@@ -318,6 +318,7 @@ class GenBook
         }
 
         // 循环章节，再循环节
+        if( !bookData.index?.chapters ) return false;
         const chapters = bookData.index.chapters;
         for( let i = 0; i < chapters.length; i++ )
         {
@@ -392,7 +393,9 @@ class GenBook
         // console.log("正在生成图片，请耐心等候…");
         // const ret = await genImage("A young woman using data analytics software and charts on multiple monitors to uncover insights and showing excitement as profits rapidly increase.");
         // console.log(ret);
-        const ret = await search( '粉丝数 关注度 社交平台', ['wikipedia.org'], false, true );
+        // const ret = await search( '粉丝数 关注度 社交平台', ['wikipedia.org'], false, true );
+        // console.log(ret);
+        const ret = await fetch_url("https://bbs.pinggu.org/thread-11199433-1-1.html");
         console.log(ret);
     }
 
