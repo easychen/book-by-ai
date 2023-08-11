@@ -1,4 +1,4 @@
-import { gen, getPrompt, readData, writeData, extractJSON, outputDir, genImage, baseDir, search, fetch_url } from '../lib/functions.js';
+import { gen, getPrompt, readData, writeData, extractJSON, outputDir, genImage, baseDir, search, fetch_url2 } from '../lib/functions.js';
 import path from 'path';
 import fs from 'fs';
 import { exec } from 'child_process';
@@ -246,6 +246,9 @@ class GenBook
                     {
                         console.log(process.env.SEARCH_DOMAIN, sections[j].queries);
                     }
+                    
+                    // 一万字符作为参考
+                    // ref = ref.substring(0, 12000);
 
                     const text = getPrompt('gen_content', { ...bookInfo, ...bookData.chapterPref||{}, ref });
                     console.log(text);
@@ -395,7 +398,7 @@ class GenBook
         // console.log(ret);
         // const ret = await search( '粉丝数 关注度 社交平台', ['wikipedia.org'], false, true );
         // console.log(ret);
-        const ret = await fetch_url("https://bbs.pinggu.org/thread-11199433-1-1.html");
+        const ret = await fetch_url2("https://www.xdsyzzs.com/shangyeliutong/7031.html");
         console.log(ret);
     }
 
