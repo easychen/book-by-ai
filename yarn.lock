@@ -252,7 +252,7 @@ domino@^2.1.6:
 
 dotenv@^16.3.1:
   version "16.3.1"
-  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.3.1.tgz"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.3.1.tgz#369034de7d7e5b120972693352a3bf112172cc3e"
   integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==
 
 emoji-regex@^8.0.0:
@@ -437,14 +437,7 @@ https-proxy-agent@^7.0.0, https-proxy-agent@^7.0.1:
     agent-base "^7.0.2"
     debug "4"
 
-iconv-lite@0.6.3:
-  version "0.6.3"
-  resolved "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.6.3.tgz"
-  integrity sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==
-  dependencies:
-    safer-buffer ">= 2.1.2 < 3.0.0"
-
-iconv-lite@^0.6.3:
+iconv-lite@0.6.3, iconv-lite@^0.6.3:
   version "0.6.3"
   resolved "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.6.3.tgz#a52f80bf38da1952eb5c681790719871a1a72501"
   integrity sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==

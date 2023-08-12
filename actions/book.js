@@ -483,6 +483,80 @@ class GenBook
         fs.writeFileSync(summaryPath, summary);
         console.log("summary 生成");
     }
+
+    async update()
+    {
+        // 修改小节内容
+        // 输入小节标题
+        const bookData = readData();
+        const section_title = await prompt({
+            type: 'input',
+            name: 'section_title',
+            message: '请输入小节标题'
+        });
+        // 搜索 bookData 定位小节
+        const chapters = bookData.index.chapters;
+        let section = null;
+        let chapter = null;
+        for( let i = 0; i < chapters.length; i++ )
+        {
+            const sections = chapters[i].sections;
+            if( !sections )
+            {
+                continue
+            }
+            for( let j = 0; j < sections.length; j++ )
+            {
+                if( sections[j].title == section_title.section_title )
+                {
+                    section = sections[j];
+                    chapter = chapters[i];
+                    break;
+                }
+            }
+        }
+        if( !section )
+        {
+            console.log("没有找到小节");
+            return;
+        }
+        // 输入修改意见
+        const info = await prompt({
+            type: 'input',
+            name: 'howToFix',
+            message: `请提供本节《${section.title}》的修改意见`,
+        });
+        // 生成修改意见
+        const bookInfo = {
+            title: bookData.title,
+            desp: bookData.desp,
+            toc: this.buildToc(),
+            chapter_title: chapter.title,
+            chapter_is_important: chapter.important?"是":"不是",
+
+            section_title: section.title,
+            section_is_important: section.important?"是":"不是",
+            section_content: section.content,
+            language: BOOK_LANG,
+        };
+        const text = getPrompt('gen_update', { ...bookInfo, ...bookData.chapterPref||{}, howto_fix: info.howToFix });
+
+        const updated_content = await gen(text,  ( message, char ) => process.stdout.write(char), 'bba-content');
+
+        // 是否确认更新到小节
+        const confirm = await prompt({
+            type: 'confirm',
+            name: 'confirm',
+            message: `是否确认更新到小节《${section.title}》？`,
+            initial: true,
+        });
+        if( confirm.confirm )
+        {
+            section.content = updated_content.json['bba-content'];
+            writeData(bookData);
+            console.log(`小节《${section.title}》更新成功`);
+        }
+    }
 }
 
 export default new GenBook();
