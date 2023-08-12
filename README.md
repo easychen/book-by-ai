@@ -26,6 +26,7 @@ Here is the English translation:
 1. git
 2. nodejs
 3. terminal
+4. [mdbook](https://rust-lang.github.io/mdBook/guide/installation.html) installed
 
 ## How to Use
 
@@ -37,7 +38,6 @@ Here is the English translation:
 6. Configure .env according to comments
 7. node bba.js book // Run full process from scratch 
 8. Follow prompts to input content
-9. Install [mdbook](https://rust-lang.github.io/mdBook/guide/installation.html)
 10. cd output/<book name>/ && mdbook serve // Preview locally
 11. cd output/<book name>/ && mdbook build // Generate html
 

@@ -26,7 +26,8 @@ Generate high-quality books with AI
 
 1. git
 1. nodejs
-1. terminal
+1. 终端
+1. 安装 [mdbook](https://rust-lang.github.io/mdBook/guide/installation.html) 命令行
 
 ## 如何使用 
 
@@ -38,7 +39,6 @@ Generate high-quality books with AI
 1. 根据注释配置 .env
 1. node bba.js book // 从头开始运行全部流程
 1. 按提示输入内容即可。如果中途遇到中断，可以重新运行命令。
-1. 安装 [mdbook](https://rust-lang.github.io/mdBook/guide/installation.html)
 1. cd output/**&lt;book name&gt;**/ && mdbook serve // 本地预览
 1. cd output/**&lt;book name&gt;**/ && mdbook build // 生成 html
 
