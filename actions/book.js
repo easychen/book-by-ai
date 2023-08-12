@@ -348,8 +348,8 @@ class GenBook {
 
   async test() {
     // console.log("Generating image, please wait...");
-    // const ret = await genImage("A young woman using data analytics software and charts on multiple monitors to uncover insights and showing excitement as profits rapidly increase.");
-    // console.log(ret);
+    const ret = await genImage("A young woman using data analytics software and charts on multiple monitors to uncover insights and showing excitement as profits rapidly increase.");
+    console.log(ret);
     // const ret = await search( 'Number of fans, engagement, social platform', ['wikipedia.org'], false, true );
     // console.log(ret);
     // const ret = await fetch_url2("https://www.xdsyzzs.com/shangyeliutong/7031.html");

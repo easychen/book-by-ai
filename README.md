@@ -1,6 +1,6 @@
 Here is the English translation:
 
-# Book By AI (AKA B.B.A) Generate high-quality books with AI
+# Book By AI
 
 > Use AI to generate high-quality ebooks
 
@@ -13,7 +13,7 @@ Here is the English translation:
 1. Manually input text: numbers within ten 
 2. Total generation time: about 2 hours
 3. Cost: Around $0.6  (cost for generating 30 images)
-4. Online reading: <https://demo01.level06.com/>
+4. Online reading: [English Book](https://demo02.level06.com/) | [中文样书](https://demo01.level06.com/)
 
 ## Video Tutorial
 
