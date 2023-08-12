@@ -4,7 +4,7 @@ Generate high-quality books with AI
 
 > 用AI生成高质量电子书
 
-[简体中文](README.md) | [English](README.cn.md) 
+[简体中文](README.cn.md) | [English](README.md) 
 
 [![](images/20230811203616.png)](https://github.com/easychen/book-by-ai/assets/1294760/e2b6e7f9-1be1-4321-b71f-3207cb202909)
 
