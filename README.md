@@ -28,6 +28,7 @@ Generate high-quality books with AI
 
 ## 如何使用 
 
+1. 开通[API2d](https://api2d.com/r/186008) 或者 自建 [AiAPI](https://github.com/easychen/aiapi) 接口
 1. git clone https://github.com/easychen/book-by-ai.git BBA
 1. cd BBA
 1. npm install
