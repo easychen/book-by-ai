@@ -13,6 +13,8 @@ Generate high-quality books with AI
 1. 花费成本：3元左右（30张图片的生成费用）
 1. 在线阅读：<https://demo01.level06.com/>
 
+https://github.com/easychen/book-by-ai/assets/1294760/e2b6e7f9-1be1-4321-b71f-3207cb202909
+
 ## 视频教程
 
 ![](images/20230812032456.png)
