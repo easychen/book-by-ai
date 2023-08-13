@@ -1,5 +1,3 @@
-Here is the English translation:
-
 # Book By AI
 
 > Use AI to generate high-quality ebooks
