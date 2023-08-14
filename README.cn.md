@@ -37,7 +37,7 @@ Generate high-quality books with AI
 1. npm install
 1. cp .env.cn.example .env
 1. 根据注释配置 .env
-1. node bba.js book // 从头开始运行全部流程
+1. node bba.js book_cn // 从头开始运行全部流程
 1. 按提示输入内容即可。如果中途遇到中断，可以重新运行命令。
 1. cd output/**&lt;book name&gt;**/ && mdbook serve // 本地预览
 1. cd output/**&lt;book name&gt;**/ && mdbook build // 生成 html
